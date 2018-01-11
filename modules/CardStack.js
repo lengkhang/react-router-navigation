@@ -78,19 +78,16 @@ class CardStack extends React.PureComponent<void, Props, State> {
     // Build navigation state
     const navigationState = buildNavigationState(location, entries, cards)
     // Set key
-    const key = 0
-    // Save everything in component state
-    this.state = { navigationState, cards, key }
-  }
+		const key = 0
 
-  // Listen hardware BackHandler event + history event
-  componentDidMount(): void {
-    const { history } = this.props
-    this.unlistenHistory = HistoryUtils.runHistoryListenner(
-      history,
+		this.unlistenHistory = HistoryUtils.runHistoryListenner(
+      props.history,
       this.onListenHistory,
     )
     BackHandler.addEventListener('hardwareBackPress', this.onNavigateBack)
+
+    // Save everything in component state
+    this.state = { navigationState, cards, key }
   }
 
   // Remove all listeners
