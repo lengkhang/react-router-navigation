@@ -151,7 +151,7 @@ class CardStack extends React.PureComponent<void, Props, State> {
       const key = StackUtils.createKey(nextRoute)
       switch (action) {
         case 'PUSH': {
-          if (nextLocation.shouldReset) {
+          if (nextLocation.state && nextLocation.state.shouldReset) {
             this.setState(() => ({
               navigationState: {
                 index: 0,
