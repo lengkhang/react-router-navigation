@@ -151,12 +151,21 @@ class CardStack extends React.PureComponent<void, Props, State> {
       const key = StackUtils.createKey(nextRoute)
       switch (action) {
         case 'PUSH': {
-          this.setState(state => ({
-            navigationState: StateUtils.push(state.navigationState, {
-              ...nextRoute,
-              key,
-            }),
-          }))
+          if (nextCard.shouldReset) {
+            this.setState(() => ({
+              navigationState: {
+                index: 0,
+                routes: [nextRoute],
+              },
+            }))
+          } else {
+            this.setState(state => ({
+              navigationState: StateUtils.push(state.navigationState, {
+                ...nextRoute,
+                key,
+              }),
+            }))
+          }
           break
         }
         case 'POP': {
