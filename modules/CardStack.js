@@ -163,7 +163,7 @@ class CardStack extends React.PureComponent<void, Props, State> {
             this.setState(() => ({
               navigationState: {
                 index: 0,
-                routes: [nextRouteWithLongKey],
+                routes: index > 0 ? [nextRouteWithLongKey] : [nextRoute],
               },
             }))
           } else {
