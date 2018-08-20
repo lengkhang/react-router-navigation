@@ -151,11 +151,19 @@ class CardStack extends React.PureComponent<void, Props, State> {
       const key = StackUtils.createKey(nextRoute)
       switch (action) {
         case 'PUSH': {
-          if (nextLocation.state && nextLocation.state.shouldReset) {
+          if (nextLocation.state && nextLocation.state.shouldClearNavigation) {
+            const keyRegex = /[^.]*.[^@@]*/
+            const validatedNextKey = keyRegex.exec(key)[0]
+            const validatedPrevKey = keyRegex.exec(navigationState.routes[0].key)[0]
+
+            const delta = validatedPrevKey.length - validatedNextKey.length
+            const padLength = delta > 0 ? delta + 1 : 0
+            const nextRouteWithLongKey = { ...nextRoute, key: validatedNextKey.padEnd(validatedNextKey.length + padLength, '0')}
+
             this.setState(() => ({
               navigationState: {
                 index: 0,
-                routes: [nextRoute],
+                routes: [nextRouteWithLongKey],
               },
             }))
           } else {
