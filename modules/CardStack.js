@@ -78,9 +78,9 @@ class CardStack extends React.PureComponent<void, Props, State> {
     // Build navigation state
     const navigationState = buildNavigationState(location, entries, cards)
     // Set key
-		const key = 0
+    const key = 0
 
-		this.unlistenHistory = HistoryUtils.runHistoryListenner(
+    this.unlistenHistory = HistoryUtils.runHistoryListenner(
       props.history,
       this.onListenHistory,
     )
@@ -152,13 +152,29 @@ class CardStack extends React.PureComponent<void, Props, State> {
       switch (action) {
         case 'PUSH': {
           if (nextLocation.state && nextLocation.state.shouldClearNavigation) {
+            if (!String.prototype.padEnd) {
+              String.prototype.padEnd = function padEnd(targetLength, padString) {
+                targetLength >>= 0 // floor if number or convert non-number to 0;
+                padString = String((typeof padString !== 'undefined' ? padString : ' '))
+                if (this.length > targetLength) {
+                  return String(this)
+                } else {
+                  targetLength -= this.length
+                  if (targetLength > padString.length) {
+                    padString += padString.repeat(targetLength / padString.length) // append to original to ensure we are longer than needed
+                  }
+                  return String(this) + padString.slice(0, targetLength)
+                }
+              }
+            }
+
             const keyRegex = /[^.]*.[^@@]*/
             const validatedNextKey = keyRegex.exec(key)[0]
             const validatedPrevKey = keyRegex.exec(navigationState.routes[0].key)[0]
 
             const delta = validatedPrevKey.length - validatedNextKey.length
             const padLength = delta > 0 ? delta + 1 : 0
-            const nextRouteWithLongKey = { ...nextRoute, key: validatedNextKey.padEnd(validatedNextKey.length + padLength, '0')}
+            const nextRouteWithLongKey = { ...nextRoute, key: validatedNextKey.padEnd(validatedNextKey.length + padLength, '0') }
 
             this.setState(() => ({
               navigationState: {
